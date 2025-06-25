@@ -12,7 +12,7 @@ create your own conversational bot, using the starter code that has
   to keep track of the conversation (both prompts and answers)
 - a prompt area with a send button
 
-your code should mainly go in the `sendPrmpt` function in the js file
+your code should mainly go in the `sendPrompt` function in the js file
 
 ## the servers and the API
 
