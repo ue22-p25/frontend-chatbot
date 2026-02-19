@@ -19,28 +19,33 @@ your code should mainly go in the `sendPrompt` function in the js file
 in order to serve your needs, we have setup two separate ***ollama*** instances,
 that each serves various LLM models  
 the details about how to reach these servers are defined in the `chatbot.js`
-file in the `SERVERS` variable (remember to add the `/api/generate` path to the
-server top URL to reach the API endpoint)
+file in the `SERVERS` variable
+
+Each of these servers provides the same API, which is documented here:
+- the [ollama API is documented here](https://github.com/ollama/ollama/blob/main/docs/api.md)
+- and also here (maybe more user-friendly):
+  - https://docs.ollama.com/api/generate
+  - https://docs.ollama.com/api/tags
 
 ### more about the servers
 
-- as you will see there are 2 endpoints available; the first one has more
-  computing resources, in particular it has a GPU
-- the other one is CPUonly and thus more limited, but can be used without
-  authentication
-- because the first one requires a login/password authentication, the code to
-  reach it is a little more complex, so you may want to start with the first one
+- as you will see there are 2 servers available
+  - the first one has more computing resources, in particular it has a GPU
+  - the other one is CPUonly and thus more limited
+- both boxes are accessible through basic authentication (meaning login/password) which are not given here as this is a public repo; you will get them in class
 
 ### several models
 
 the beauty of *ollama* is that several models are made available through the
 same API; this means you are going to be in a position to compare the
 performance of several popular LLMs by just changing the value for the `model`
-field above; here are the available options for that field
+field above; here are 2 available options for that field
 
 - `gemma2:2b`: a small model; I recommended you use only this model during development
   as it is faster and uses fewer resources
 - `mistral:7b`: it has 7 billion parameters, to get more realistic answers once your code works fine
+
+as we'll see below, that there are more models available, but you can assume at least these 2 will be available on both servers
 
 ## hints
 
@@ -48,18 +53,26 @@ field above; here are the available options for that field
 
 starting from scratch, I recommend that you tackle the problem in the following order
 
-- start with the simplest setup, i.e. using the CPU box (no need for
-  authentication), first in no-streaming mode (see below)  
-  this amounts to sending a usual POST request to the server, and waiting for
-  the answer
-- at that point, pour authentication in the mix, so you can talk to the GPU,
-  which will answer faster
+- you better start with a hard-wird list of models (see the global `MODELS`
+  constant in `chatbot.js`)  
+  and in non-streaming mode (see below)  
+  this way you can write the code that just submits the prompt  
+  for that you will use the `/api/generate` endpoint of the API  
+  this amounts to sending a usual POST request to the server, and you will get
+  the answer back in a single response (so no need to deal with streaming)  
+  also, see the next section for more details about authenticating
+
+- once you have that working (i.e. you can submit a prompt and get an answer
+  back), you can write the code that fetches the list of available models from
+  the server, and populate the model selection dropdown with that list;  
+  for that you will use the `/api/tags` endpoint of the API  
+
 - and then only try to tackle the streaming mode, which is a little more complex
-  (although we give the code for that below)
+  (although we also give the code for that below)
 
 ### authenticating
 
-the GPU server requires authentication, so you will need to somehow provide a `login / password`  
+you will need to provide a `login / password`  
 to that effect you need to enhance the `request` object passed to `fetch()` with
 an additional field `headers` that you would build like so:
 
@@ -160,18 +173,6 @@ so you have two options for this exercise - and like always, fast students are e
   ...
   ```
 
-### fetch the list of available models
-
-once all this works, you may want to improve your code so that the user is **no
-longer offered a fixed list** of models;  
-instead, we want to show the list of models that are **actually available** on
-the server
-
-and to that end, you should know that the llama API provides a `/api/tags` endpoint  
-be wary to refresh the models list **each time another server** is selected;  
-(it might make sense to cache the results so that successive switches between the 2
-servers proceed as smoothly as possible)
-
 ### other tips
 
 - the starter contains a few utility functions that you may find useful
@@ -187,4 +188,3 @@ servers proceed as smoothly as possible)
   `preventDefault()` on the incoming event; leave it as-is, because in our case
   we do not want to reach the original server (which would reload the page, and
   lose the conversation history)
-- the [ollama API is documented here](https://github.com/ollama/ollama/blob/main/docs/api.md)

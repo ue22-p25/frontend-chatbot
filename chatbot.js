@@ -4,15 +4,18 @@
 
 const SERVERS = [
 
-    // this one is fast because it has GPUs, but it requires a login / password
+    // this one is fast because it has GPUs
     {
         name: "GPU fast", url: "https://ollama-sam.inria.fr",
-        username: "Bob", password: "hiccup",
+        // not given here as this is a public repo...
+        username: "xxx", password: "xxx",
     },
 
-    // this one is slow because it has no GPUs, but it does not require a login / password
+    // this one is slow because it has no GPUs
     {
-        name: "CPU slow", url: "http://ollama.pl.sophia.inria.fr:8080",
+        name: "CPU slow", url: "https://ollama.pl.sophia.inria.fr",
+        // not given here as this is a public repo...
+        username: "xxx", password: "xxx",
         // start with this one as the default
         default: true,
     },
@@ -88,7 +91,6 @@ window.addEventListener('DOMContentLoaded',
             const url = document.getElementById("server-name").value
             for (const server of SERVERS) {
                 if (server.url === url) {
-                    server.prefix = `${url}/api/generate`
                     return server
                 }
             }
